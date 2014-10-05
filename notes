@@ -1,0 +1,1 @@
+cat allports* |grep -v Starting |grep -v 'Host is'|grep -v 'Nmap done'|grep -v 'Not shown'|grep -v 'MAC A'|grep -v 'PORT     STATE'|replace 'Nmap scan report for ' ''>allfiles.txt
