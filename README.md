@@ -1,19 +1,3 @@
-
-
-sudo ps -A|grep nmap
-kill -9 *pid*
-
-Future:  Host discovery may be integrated into this script using tools such as fing.  It'll basically automate the generation of the target IP address file.
-
-Format:
-
-IP Address
-999.999.999.999      Ports:  TCP 999,999...999 UDP 999,999,999...999
-...
-999.999.999.999      Ports:  TCP 999,999...999 UDP 999,999,999...999
-
-Requirements:  Linux / Python
-
 *** The project is incomplete / was just started on 10/4/14 but should be complete within a few days ***
 
 nmapformat
@@ -24,6 +8,11 @@ Description
 This Python script scans multiple IP addresses with nmap and pretty's up the output.
 
 The user should put a list of target IPs in a text file;  this program then performs Nmap udp and syn scans of those IPs followed by pretty formatting of results which can more easily be integrated into a penetration test report.   The nmap scans run in parallel. The number of processes still running displays on the screen.  If a process or two is not completing, get the pid and kill it with:
+
+sudo ps -A|grep nmap
+kill -9 *pid*
+
+Future:  Host discovery may be integrated into this script using tools such as fing.  It'll basically automate the generation of the target IP address file.
 
 Features
 --------
