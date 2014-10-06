@@ -5,40 +5,36 @@ import errno
 import array
 import re
 #
-# *** Incomplete program ***
-#
 # Author: x1x
-#
+# 
 # Date: 10/04/14
 #
-# Description: Typically, a penetration test report will
-# contain a list of active hosts and ports. In this instance,
+# Description:  Typically, a penetration test report will 
+# contain a list of active hosts and ports.   In this instance, 
 # ports of types TCP and UDP will be listed.
 #
 # Requirements: Linux OS / Python / nmap
+# Versions tested: 
 #
-# Versions tested:
-# Python: 2.73 (major=2, minor=7, micro=3, releaselevel='final', serial=0)
-# nmap: 6.46
-# Linux: 3.14-kali1-686-pae (debian-kernel@lists.debian.org)
-# (gcc version 4.7.2 (Debian 4.7.2-5) ) #1 SMP Debian 3.14.4-1kali1 (2014-05-14)
 #
 # Instructions:
 #
 # 1. Create a directory.
 # 2. Download format.py to the directory.
-# 3. Create a text file called target_addresses.txt containing
-# the IP addresses to be scanned.
-# 4. Run the following command: sudo python nmapformat.py
-# It is necessary to run as superuser since a SYN scan flag
-# requires it.
+# 3. Create a text file called target_addresses.txt containing 
+#    the IP addresses to be scanned.
+# 4. Ensure the current directory is this newly created directory
+#    by typing pwd.
+# 5. Run the following command: sudo python nmapformat.py
+#    It is necessary to run as superuser since a SYN scan flag
+#    requires it.
 #
-# The program will display the number of nmap scans still
-# running and update it as processes complete. Since a UDP
-# scan is time-consuming, these processes will take more
-# than just a few seconds to complete.
-# 
-# 6. The resultant file is final.txt .
+#    The program will display the number of nmap scans still 
+#    running and update it as processes complete.  Since a UDP
+#    scan is time-consuming, these processes will take more 
+#    than just a few seconds to complete.  
+#    
+# 6. The resultant file is nmapformat.txt .
 #
 # Details:  This program will start nmap for each IP in the 
 # target_addresses.txt file.  The flags for nmap are:
@@ -76,8 +72,6 @@ for line in file:
    sv_running_processes == running_processes
 
 while running_processes > 0:
-  # Sleep for awhile so as not to waste too much system resources rechecking.
-    time.sleep(5)
   # Computer the number of processes by looking at all the processes stored in the process_array
   # structure.  The format of that object is defined in the subprocess module.
     running_processes = 0
@@ -86,9 +80,11 @@ while running_processes > 0:
            running_processes = running_processes + 1
 
     if sv_running_processes != running_processes:
-    # If the number of running processes has changed, display the value on the screen.
+  # If the number of running processes has changed, display the value on the screen.
        print 'Number of running Processes: '+str(running_processes)
        sv_running_processes = running_processes
+  # Sleep for awhile so as not to waste too much system resources rechecking.
+    time.sleep(5)
 
 #
 # All nmap processes are now complete and the results are stored as individual files for
@@ -105,15 +101,21 @@ for f in filenames:
 # are below.   Exception handling and modular programming was secondary while
 # coding this section but it will be improved.
 #
-lines = [line.strip() for line in open('joined_file.txt')]
+line_work = [line.strip() for line in open('joined_file.txt')]
+lines=[]
+for r in line_work:
+    if re.match("(.*)Port(.*)", r):
+       lines.append(r)
+       print r
 
 myfile = open('final.txt', 'w')
 for s in lines:
-   print 'Line: '+s
+   line = s
+   print s
+
    tcp_ports = []
    udp_ports = []
    port_fields = []
-   line = s
    end_of_ip_address = re.search(r"[^a-zA-Z](\(\))[^a-zA-Z]", line).start()
    ip_addr = line[7:end_of_ip_address]
 
@@ -134,13 +136,13 @@ for s in lines:
        port_fields_work = s
        port_fields = port_fields_work.split("/")
        print port_fields
-       if port_fields[2]=="udp":
+       if port_fields[2]=="udp":                                                                                                                                                                                  
           udp_ports.append(port_fields[0])
        if port_fields[2]=="tcp":
           tcp_ports.append(port_fields[0])
 
    output_line = ip_addr
-   firsttcp = 'yes'                                                                                                                                                                                               
+   firsttcp = 'yes'
    for t in tcp_ports:
       if firsttcp == 'yes':
          output_line = output_line+' TCP:'                                                                                                                                                                        
