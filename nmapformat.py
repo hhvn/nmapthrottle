@@ -36,6 +36,7 @@ import re
 #    
 # 6. The resultant file is nmapformat.txt .
 #
+#
 # Details:  This program will start nmap for each IP in the 
 # target_addresses.txt file.  The flags for nmap are:
 #
