@@ -3,8 +3,7 @@ import os
 import time
 import errno
 import array
-#
-# *** Incomplete program ***
+import re
 #
 # Author: x1x
 # 
@@ -15,20 +14,18 @@ import array
 # ports of types TCP and UDP will be listed.
 #
 # Requirements: Linux OS / Python / nmap
-#
 # Versions tested: 
-#  Python: 2.73 (major=2, minor=7, micro=3, releaselevel='final', serial=0)
-#  nmap:   6.46
-#  Linux:  3.14-kali1-686-pae (debian-kernel@lists.debian.org) 
-#                            (gcc version 4.7.2 (Debian 4.7.2-5) ) #1 SMP Debian 3.14.4-1kali1 (2014-05-14)
-#  
+#
+#
 # Instructions:
 #
 # 1. Create a directory.
 # 2. Download format.py to the directory.
 # 3. Create a text file called target_addresses.txt containing 
 #    the IP addresses to be scanned.
-# 4. Run the following command: sudo python nmapformat.py
+# 4. Ensure the current directory is this newly created directory
+#    by typing pwd.
+# 5. Run the following command: sudo python nmapformat.py
 #    It is necessary to run as superuser since a SYN scan flag
 #    requires it.
 #
@@ -37,7 +34,7 @@ import array
 #    scan is time-consuming, these processes will take more 
 #    than just a few seconds to complete.  
 #    
-# 6. The resultant file is nmapformat.txt . *** INCOMPLETE AS OF 10/5/14 ***
+# 6. The resultant file is nmapformat.txt .
 #
 # Details:  This program will start nmap for each IP in the 
 # target_addresses.txt file.  The flags for nmap are:
@@ -47,8 +44,8 @@ import array
 # -sU : This lengthens the duration of the scan but is necessary
 #       for a complete penetration test report.
 # -oG : This flag specifies an output file format which is
-#       easier to reformat to more easily integrate with the 
-#       penetration test report.                                                                                                                                                                                  
+#       easier to reformat to more easily integrate with the                                                                                                                                                      
+#       penetration test report.
 
 def process_exists(tst):
     """Check whether pid exists in the current process table."""
@@ -75,8 +72,6 @@ for line in file:
    sv_running_processes == running_processes
 
 while running_processes > 0:
-  # Sleep for awhile so as not to waste too much system resources rechecking.
-    time.sleep(5)
   # Computer the number of processes by looking at all the processes stored in the process_array
   # structure.  The format of that object is defined in the subprocess module.
     running_processes = 0
@@ -85,22 +80,87 @@ while running_processes > 0:
            running_processes = running_processes + 1
 
     if sv_running_processes != running_processes:
-    # If the number of running processes has changed, display the value on the screen.
+  # If the number of running processes has changed, display the value on the screen.
        print 'Number of running Processes: '+str(running_processes)
        sv_running_processes = running_processes
+  # Sleep for awhile so as not to waste too much system resources rechecking.
+    time.sleep(5)
 
 #
 # All nmap processes are now complete and the results are stored as individual files for
 # each IP.  To ease the reformatting process, they will now be recombined.
 #
-filenames = os.listdir('.')
-content = ''                                                                                                                                                                                                      
+filenames = os.listdir('.')                                                                                                                                                                                       
+content = ''
 for f in filenames:
     if f.startswith("nmap") and f.endswith(".txt"):
        content = content + '\n' + open(f).read()
        open('joined_file.txt','wb').write(content)
 #
-# The parsing of the resultant file is not complete.  Work continues on this.
+# The resultant file is called final_file.txt . The parsing and file writes
+# are below.   Exception handling and modular programming was secondary while
+# coding this section but it will be improved.
 #
+line_work = [line.strip() for line in open('joined_file.txt')]
+lines=[]
+for r in line_work:
+    if re.match("(.*)Port(.*)", r):
+       lines.append(r)
+       print r
 
-# Incomplete:  See the file called joined_file.txt for the partial results.
+myfile = open('final.txt', 'w')
+for s in lines:
+   line = s
+   print s
+
+   tcp_ports = []
+   udp_ports = []
+   port_fields = []
+   end_of_ip_address = re.search(r"[^a-zA-Z](\(\))[^a-zA-Z]", line).start()
+   ip_addr = line[7:end_of_ip_address]
+
+   port_pos = re.search(r"[^a-zA-Z](Ports: )[^a-zA-Z]", line).start()
+   line_stripped_left = line[port_pos+8:]
+
+   print 'LSL: '+line_stripped_left
+
+   if re.search(r"[^a-zA-Z](Ignored)[^a-zA-Z]",line_stripped_left) is not None:
+      right_end_pos = re.search(r"[^a-zA-Z](Ignored)[^a-zA-Z]", line_stripped_left).start()
+      line_stripped_lr = line_stripped_left[:right_end_pos-1]
+   else:
+      line_stripped_lr = line_stripped_left
+   print 'LSLR: '+line_stripped_lr
+   ports = line_stripped_lr.split(" ")
+   print ports
+   for s in ports:
+       port_fields_work = s
+       port_fields = port_fields_work.split("/")
+       print port_fields
+       if port_fields[2]=="udp":                                                                                                                                                                                  
+          udp_ports.append(port_fields[0])
+       if port_fields[2]=="tcp":
+          tcp_ports.append(port_fields[0])
+
+   output_line = ip_addr
+   firsttcp = 'yes'
+   for t in tcp_ports:
+      if firsttcp == 'yes':
+         output_line = output_line+' TCP:'                                                                                                                                                                        
+         firsttcp = 'no'
+      else:
+         output_line = output_line+', '
+      output_line = output_line+" "+t.strip()
+
+   firstudp = 'yes'
+   for u in udp_ports:
+      if firstudp == 'yes':
+         output_line = output_line+' UDP: '
+         firstudp = 'no'
+      else:
+         output_line = output_line+', '
+      output_line = output_line+u.strip()+" "
+
+   #var1, var2 = output_line.split(",")
+   myfile.write("%s\n" % output_line)
+
+myfile.close()
