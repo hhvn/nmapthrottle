@@ -11,6 +11,8 @@ sudo ps -A|grep nmap
 
 kill -9 *pid*
 
+Warning:  Use caution when running this program with a large number of IP addresses.  This program starts nmap scans of all IP addresses in parallel.  Too many processes may cause system performance issues including possibly a system crash.
+
 Changes to be made:
 Addition of a separate UDP port category called 'open|filtered', to more accurately represent UDP port states.  At this time  'open|filtered' and 'open' UDP ports are grouped together.
 Modularization of code by addition of functions, and review/implementation of Python best practices
