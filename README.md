@@ -1,5 +1,3 @@
-*** The project is incomplete / was just started on 10/4/14 but should be complete within a few days ***
-
 nmapformat
 ============
 
