@@ -5,36 +5,39 @@ import errno
 import array
 import re
 #
+# *** Incomplete program ***
+#
 # Author: x1x
-# 
+#
 # Date: 10/04/14
 #
-# Description:  Typically, a penetration test report will 
-# contain a list of active hosts and ports.   In this instance, 
-# ports of types
-# TCP and UDP will be listed.
+# Description: Typically, a penetration test report will
+# contain a list of active hosts and ports. In this instance,
+# ports of types TCP and UDP will be listed.
 #
 # Requirements: Linux OS / Python / nmap
-# Versions tested: *&*&
 #
+# Versions tested:
+# Python: 2.73 (major=2, minor=7, micro=3, releaselevel='final', serial=0)
+# nmap: 6.46
+# Linux: 3.14-kali1-686-pae (debian-kernel@lists.debian.org)
+# (gcc version 4.7.2 (Debian 4.7.2-5) ) #1 SMP Debian 3.14.4-1kali1 (2014-05-14)
 #
 # Instructions:
 #
 # 1. Create a directory.
 # 2. Download format.py to the directory.
-# 3. Create a text file called target_addresses.txt containing 
-#    the IP addresses to be scanned.
-# 4. Ensure the current directory is this newly created directory
-#    by typing pwd.
-# 5. Run the following command: sudo python nmapformat.py
-#    It is necessary to run as superuser since a SYN scan flag
-#    requires it.
+# 3. Create a text file called target_addresses.txt containing
+# the IP addresses to be scanned.
+# 4. Run the following command: sudo python nmapformat.py
+# It is necessary to run as superuser since a SYN scan flag
+# requires it.
 #
-#    The program will display the number of nmap scans still 
-#    running and update it as processes complete.  Since a UDP
-#    scan is time-consuming, these processes will take more 
-#    than just a few seconds to complete.  
-#    
+# The program will display the number of nmap scans still
+# running and update it as processes complete. Since a UDP
+# scan is time-consuming, these processes will take more
+# than just a few seconds to complete.
+# 
 # 6. The resultant file is final.txt .
 #
 # Details:  This program will start nmap for each IP in the 
