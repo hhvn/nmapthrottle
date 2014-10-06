@@ -32,7 +32,13 @@ None
 
 Requirements
 ------------
-* python >= 2.6
+Linux OS / Python / nmap
+
+Versions tested:
+Python: 2.73 (major=2, minor=7, micro=3, releaselevel='final', serial=0)
+nmap: 6.46
+Linux: 3.14-kali1-686-pae (debian-kernel@lists.debian.org)
+(gcc version 4.7.2 (Debian 4.7.2-5) ) #1 SMP Debian 3.14.4-1kali1 (2014-05-14)
 
 
 Copyright and license
