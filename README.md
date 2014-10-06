@@ -5,17 +5,23 @@ Description
 -----------
 This Python script scans multiple IP addresses with nmap and pretty's up the output.
 
-The user should put a list of target IPs in a text file;  this program then performs Nmap udp and syn scans of those IPs followed by pretty formatting of results which can more easily be integrated into a penetration test report.   The nmap scans run in parallel. The number of processes still running displays on the screen.  If a process or two is not completing, get the pid and kill it with:
+Based on a list of IP addresses the user populates in a text file, this program performs Nmap udp and syn scansby pretty formatting of results which can more easily be integrated into a penetration test report.   The nmap scans run in parallel. The number of processes still running displays on the screen.  If a process or two is not completing, get the pid and kill it with:
 
 sudo ps -A|grep nmap
 
 kill -9 *pid*
 
-Future:  Host discovery may be integrated into this script using tools such as fing.  It'll basically automate the generation of the target IP address file.
+Changes to be made:
+Addition of a separate UDP port category called 'open|filtered', to more accurately represent UDP port states.  At this time  'open|filtered' and 'open' UDP ports are grouped together.
+Modularization of code by addition of functions, and review/implementation of Python best practices
+
+Considered changes for future:  
+Host discovery may be integrated into this script using tools such as fing.  It'll basically automate the generation of the target IP address file.
+Addition of options:  The ability to skip the scans and go straight to the formatting of results from a previous scan; a maximum scan time parameter, to allow for an abort after a set time period.  I have seen at least one case where a scan never finished and I had to kill its process.
 
 Features
 --------
-* 
+* nmap processes run in parallel, saving a large amount of time.  Care must be taken when running in a production environment.  If the number of IPs to scan gets into the hundreds and thousands, that may bog down the system considerably or have other adverse ffects.
 
 Usage
 -----
