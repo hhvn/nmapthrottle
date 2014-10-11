@@ -11,7 +11,9 @@ import re
 #
 # Description: Typically, a penetration test report will
 # contain a list of active hosts and ports. In this instance,
-# ports of types TCP and UDP will be listed.
+# ports of types TCP and UDP will be listed if they are open.
+# In addition, Open / Filtered UDP ports have their own
+# section to be listed.
 #
 # Requirements: Linux OS / Python / nmap
 #
@@ -64,7 +66,7 @@ debugf = 'no'
 
 # All processes are stored in process_array just after they are started.
 # This allows for checking if it is still running. We count the number
-# of processes in the following variable.
+# of processes in the following variable.                                      
 #
 running_processes = 0
 process_array = []
@@ -83,7 +85,7 @@ for line in file:
 # process_array contains information about all started processes.   
 #
 sv_running_processes = 0
-                                                                                                                                                                                                                  
+                                                                               
 while running_processes > 0:
   # Computer the number of processes by looking at all the processes stored in the process_array
   # structure.  The format of that object is defined in the subprocess module.
@@ -101,7 +103,7 @@ while running_processes > 0:
 
 #
 # All nmap processes are now complete and the results are stored as individual files for
-# each IP.  To ease the reformatting process, they will now be recombined.  The resultant
+# each IP.  To ease the reformatting process, they will now be recombined.  The resultant                                                                      
 # file is called joined_file.txt .  
 #
 # The format of these files is nmap<ip_address>.txt .  
@@ -122,14 +124,14 @@ for f in filenames:
 # line_work.  This is a good example I found on bufferoverflow.com of
 # a really simple and effective file read into an array. All on one line!
 #
-line_work = [line.strip() for line in open('joined_file.txt')]
+line_work = [line.strip() for line in open('joined_file.txt')]                 
 
 # This section limits our parsing only to lines with the word 'Port' in them.
 # We will read the array called line_work, populated in the file read above,
 # and place the results into the next array: lines.  
 #
 lines=[]
-for r in line_work:                                                                                                                                                                                               
+for r in line_work:
     if re.match("(.*)Port(.*)", r):
        lines.append(r)
        if debugf == 'y':
@@ -144,7 +146,7 @@ myfile = open('final.txt', 'w')
 # One line at a time, we read the lines array and use string functions
 # to build the record for final.txt .
 #
-for s in lines:
+for s in lines:                                                                
    line = s
    if debugf == 'y':
       print s
@@ -160,22 +162,23 @@ for s in lines:
 
    tcp_ports = []
 
-# UDP port numbers are stored in this array as the line is parsed.
+# UDP port numbers are stored in these array as the line is parsed.
 
-   udp_ports = []
+   openfiltered_udp_ports = []
+   open_udp_ports = []
 
 # The IP address is parse and stored for later inclusion in the output
-# file at the beginning of the line.
+# file at the beginning of the line.                                           
 
    end_of_ip_address = re.search(r"[^a-zA-Z](\(\))[^a-zA-Z]", line).start()
-   ip_addr = line[7:end_of_ip_address]
+   ip_addr = line[6:end_of_ip_address]
 
 #
 # The following code group strips off extraneous information from the
 # left and right of the line, leaving only port information.
 #
 # Much of this code was derived from examples on bufferoverflow.com . I
-# recommend it for learning and copying to reuse.                                                                                                                                                                 
+# recommend it for learning and copying to reuse.
 #
 
    port_pos = re.search(r"[^a-zA-Z](Ports: )[^a-zA-Z]", line).start()
@@ -186,7 +189,7 @@ for s in lines:
 
    if re.search(r"[^a-zA-Z](Ignored)[^a-zA-Z]",line_stripped_left) is not None:
       right_end_pos = re.search(r"[^a-zA-Z](Ignored)[^a-zA-Z]", line_stripped_left).start()
-      line_stripped_lr = line_stripped_left[:right_end_pos-1]
+      line_stripped_lr = line_stripped_left[:right_end_pos-1]                  
    else:
       line_stripped_lr = line_stripped_left
    if debugf == 'y':
@@ -206,25 +209,28 @@ for s in lines:
 #
 
    for s in ports:
-       port_fields_work = s
+       port_fields_work = s                                                    
        port_fields = port_fields_work.split("/")
        if debugf == 'y':
           print port_fields
-       if port_fields[2]=="udp":
-          udp_ports.append(port_fields[0])
        if port_fields[2]=="tcp":
           tcp_ports.append(port_fields[0])
-
+       if port_fields[2]=="udp" :
+          if port_fields[1]=='open|filtered':
+             openfiltered_udp_ports.append(port_fields[0])
+          else:
+             open_udp_ports.append(port_fields[0])
+           
 #
 # We have all of the information necessary for the output line: The IP address, and
 # TCP and UDP ports.  This code produces a line that has the following format:
 #
 # 999.999.999 TCP 9999, 9999...9999 UDP: 9999, 9999, .... 9999
 #
-# Example:                                                                                                                                                                                                        
+# Example:
 # 192.168.12.300 TCP 80, 8080, UDP: 123
 #
-# flags determine proper placement of commas and port type headers.
+# flags determine proper placement of commas and port type headers.            
 #
 
    output_line = ip_addr
@@ -238,9 +244,18 @@ for s in lines:
       output_line = output_line+" "+t.strip()
 
    firstudp = 'yes'
-   for u in udp_ports:
+   for u in open_udp_ports:
       if firstudp == 'yes':
-         output_line = output_line+' UDP: '
+         output_line = output_line+' OPEN UDP: '
+         firstudp = 'no'
+      else:
+         output_line = output_line+', '
+      output_line = output_line+u.strip()+" "                                  
+
+   firstudp = 'yes'
+   for u in openfiltered_udp_ports:
+      if firstudp == 'yes':
+         output_line = output_line+' OPEN|FILTERED UDP: '
          firstudp = 'no'
       else:
          output_line = output_line+', '
