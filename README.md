@@ -31,10 +31,7 @@ Usage
 2. Download nmapformat.py to the directory.
 3. Create a text file called target_addresses.txt containing the IP addresses to be scanned, one IP per line. It should be in the same directory as nmapformat.py.
 4. Ensure the current directory is this newly created directory by typing pwd.
-5. Run the following command: sudo python nmapformat.py . It is necessary to run as superuser since a SYN scan flag requires it.
-
-As the program runs, it will display the number of nmap scans still running and update it as processes complete. Since a UDPscan is time-consuming, these processes will take more than just a few seconds to complete. I could take half an hour.
-
+5. Run the following command: sudo python nmapformat.py . It is necessary to run as superuser since a SYN scan flag requires it. As the program runs, it will display the number of nmap scans still running and update it as processes complete. Since a UDP scan is time-consuming, these processes will take more than just a few seconds to complete. I could take half an hour.
 6. The resultant file is final.txt .
 
 ### Options
