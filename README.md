@@ -3,15 +3,15 @@ nmapformat
 
 Description
 -----------
-This Python script scans multiple IP addresses with nmap and pretty's up the output.
+This Python script scans multiple IP addresses with nmap formatting the output.
 
-Based on a list of IP addresses the user populates in a text file, this program performs Nmap udp and syn scans followed by pretty formatting of results which can more easily be integrated into a penetration test report.   The nmap scans run in parallel. The number of processes still running displays on the screen.  If a process or two is not completing, get the pid and kill it with:
+Based on a list of IP addresses the user populates in a text file, this program performs Nmap udp and syn scans followed by  formatting of results which can more easily be integrated into a penetration test report.   The nmap scans run in parallel. The number of processes still running displays on the screen.  If a process or two is not completing, get the pid and kill it with:
 
 sudo ps -A|grep nmap
 
 kill -9 *pid*
 
-Warning:  Use caution when running this program with a large number of IP addresses.  This program starts nmap scans of all IP addresses in parallel.  Too many processes may cause system performance issues including possibly a system crash.
+*** Warning:  Use caution when running this program with a large number of IP addresses.  This program starts nmap scans of all IP addresses in parallel.  Too many processes may cause system performance issues including possibly a system crash. ***
 
 Changes to be made:
 Addition of a separate UDP port category called 'open|filtered', to more accurately represent UDP port states.  At this time  'open|filtered' and 'open' UDP ports are grouped together.
