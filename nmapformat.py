@@ -15,6 +15,10 @@ import re
 # In addition, Open / Filtered UDP ports have their own
 # section to be listed.
 #
+# A child process will be kicked off for each host being
+# scanned, and they will all run in parallel.  Therefore,
+# use caution.  Too many processes could cause big problems.
+#
 # Requirements: Linux OS / Python / nmap
 #
 # Instructions:
@@ -33,7 +37,7 @@ import re
 # As the program runs, it will display the number of nmap 
 # scans still running and update it as processes complete. 
 # Since a UDPscan is time-consuming, these processes will 
-# take more than just a few seconds to complete. I could
+# take more than just a few seconds to complete. It could
 # take half an hour.
 #
 # 6. The resultant file is final.txt .
@@ -49,7 +53,13 @@ import re
 # easier to reformat to more easily integrate with the
 # penetration test report.
 #
-
+# Please email me with recommendations for improvements.  I
+# tailored this program to my specific needs but want to 
+# eventually make it as widely useful as possible.
+#
+# Feel free to modify the source code on your system, such as
+# adding and removing flags from the nmap system call.  
+#
 def process_exists(tst):
     """Check whether pid exists in the current process table."""
     retcode = tst.poll()
@@ -162,14 +172,20 @@ for s in lines:
 
    tcp_ports = []
 
-# UDP port numbers are stored in these array as the line is parsed.
+# UDP port numbers are stored in these arrays as the line is parsed.
 
    openfiltered_udp_ports = []
    open_udp_ports = []
 
+#
 # The IP address is parse and stored for later inclusion in the output
-# file at the beginning of the line.                                           
-
+# file at the beginning of the line.  The key part of the search method
+# is \(\).  The search string is actually looking for (), but the back-
+# slash is necessary as an escape character.  Essentially, we are looking
+# for (), which occurs on every line in the line array.  The rest of the 
+# line, before and after (\(\)) means there can be a string of characters
+# before or after the one for which we are searching.
+#
    end_of_ip_address = re.search(r"[^a-zA-Z](\(\))[^a-zA-Z]", line).start()
    ip_addr = line[6:end_of_ip_address]
 
