@@ -3,7 +3,7 @@ nmapformat
 
 Description
 -----------
-This Python script scans multiple IP addresses with nmap formatting the output.
+This Python script scans multiple IP addresses with nmap formatting the output.  It's basically a wrapper for nmap.
 
 Based on a list of IP addresses the user populates in a text file, this program performs Nmap udp and syn scans followed by  formatting of results which can more easily be integrated into a penetration test report.   The nmap scans run in parallel. The number of processes still running displays on the screen.  If a process or two is not completing, get the pid and kill it with:
 
