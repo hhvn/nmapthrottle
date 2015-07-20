@@ -3,9 +3,9 @@ nmapthrottle
 
 Description
 -----------
-This Python script scans multiple IP addresses with nmap.  Throttling of scans is done, 3 max processes, one IP address per process, as the default.  This default setting can be changed via command line argument.  The output is meant for import into a spreadsheet for easy pivot table and report creation.   The format is a comma-separated record with
+This Python script scans multiple IP addresses with nmap.  One nmap process is kicked off for each IP address.  Throttling of scans is performed with three maximum processes as the default.  This default of three can be changed via command line argument.  The output is meant for import into a spreadsheet for easy pivot table and report creation.   The format is a comma-separated record with the following layout:
 
-IP Address, Status (OPEN, OPEN|FILTERED), Protocol (TCP/UDP), Port number.
+IP Address, Status (OPEN, OPEN|FILTERED), Protocol (TCP/UDP), Port number
 
 There are other options.  Type the following to see all options.
 
@@ -21,9 +21,8 @@ The nmap command is called with the following scan types and flag settings:
 
 Possible changes to be made:
 --------
-* Addition of optional argument and functionality for host discovery.
-* Addition of optional output file name argument.
-* Addition of optional speed argument.
+* Addition of optional arguments:
+  functionality for host discovery / output file name speed flag setting / optionally allow UDP scans.  Currently UDP scans occur by default.
 
 Features
 --------
