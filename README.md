@@ -11,12 +11,19 @@ There are other options.  Type the following to see all options.
 
 sudo python nmapthrottle.py -h 
 
+The nmap command is called with the following scan types and flag settings:
+-T3 : normal speed
+-P0 : skip host discover
+-sS : Syn scan, to find TCP ports
+-sU : UDP scan
+
 *** Warning:  Use caution when running this program with a large number of IP addresses.  This program starts nmap scans of all IP addresses in parallel.  Too many processes may cause system performance issues including possibly a system crash. ***
 
-Changes to be made:
+Possible changes to be made:
 --------
-* Possible addition of flag for host discovery.
-* Possible addition of optional output file name argument.
+* Addition of optional argument and functionality for host discovery.
+* Addition of optional output file name argument.
+* Addition of optional speed argument.
 
 Features
 --------
@@ -31,8 +38,17 @@ Usage
 5. Run the following command: sudo python nmapthrottle.py . It is necessary to run as superuser since a SYN scan flag requires it. As the program runs, it will display the number of nmap scans still running and update it as processes complete. Since a UDP scan is time-consuming, these processes will take more than just a few seconds to complete. I could take half an hour.
 6. The resultant file is final.txt .
 
-### Options
-None
+### Usage
+$ python nmapthrottle.py -h
+usage: nmapthrottle.py [-h] [-i FILE] [-s [SLEEP]] [-c [CONCURRENT]] [-d]
+
+optional arguments:
+  -h, --help                                  show this help message and exit
+  -i FILE, --inputfile FILE                   Input file with IP addresses, one per line. Default name is target_addresses.txt
+  -s [SLEEP], --sleep [SLEEP]                 Amount of time in seconds to sleep between status checks
+  -c [CONCURRENT], --concurrent [CONCURRENT]  Maximum number of concurrent processes allowed
+  -d, --debug                                 Show debug messages
+
 
 Requirements
 ------------
