@@ -29,7 +29,7 @@ Features
 --------
 * nmap processes run in parallel, saving a large amount of time.  Care must be taken when running in a production environment. If the number of IPs to scan gets into the hundreds and thousands, that may bog down the system considerably or have other adverse ffects.
 
-Usage
+Instructions
 -----
 1. Create a directory.
 2. Download nmapthrottle.py to the directory.
