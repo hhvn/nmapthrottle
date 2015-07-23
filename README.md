@@ -65,6 +65,9 @@ nmap: 6.46
 
 Linux: 3.14-kali1-686-pae
 
+Thanks
+------------
+Thanks to the developers, maintainers and benefactors of nmap(https://nmap.org/), Python(https://www.python.org/), Debian (https://www.debian.org/) and Kali(https://www.kali.org/). Love your software! 
 
 Copyright and license
 ---------------------
